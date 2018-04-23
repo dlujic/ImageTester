@@ -32,23 +32,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Eyes.Images, Version=1.22.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Eyes.Images.1.22.0\lib\net35\Eyes.Images.dll</HintPath>
-    </Reference>
-    <Reference Include="Eyes.Sdk.DotNet, Version=2.5.2.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Eyes.Sdk.2.5.3\lib\net45\Eyes.Sdk.DotNet.dll</HintPath>
-    </Reference>
-    <Reference Include="Eyes.Utils.DotNet, Version=2.4.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Eyes.Sdk.2.5.3\lib\net45\Eyes.Utils.DotNet.dll</HintPath>
-    </Reference>
-    <Reference Include="Ionic.Zip.Reduced, Version=1.9.1.8, Culture=neutral, PublicKeyToken=edbe51ad942a3f5c, processorArchitecture=MSIL">
-      <HintPath>..\packages\DotNetZip.Reduced.1.9.1.8\lib\net20\Ionic.Zip.Reduced.dll</HintPath>
-    </Reference>
-    <Reference Include="log4net, Version=1.2.11.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
-      <HintPath>..\packages\log4net.2.0.0\lib\net40-full\log4net.dll</HintPath>
-    </Reference>
-    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.6.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Eyes.Bundle, Version=1.22.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\bin\Release\Eyes.Bundle.dll</HintPath>
     </Reference>
     <Reference Include="PdfiumViewer, Version=2.12.0.0, Culture=neutral, PublicKeyToken=91e4789cfb0609e0, processorArchitecture=MSIL">
       <HintPath>..\packages\PdfiumViewer.2.12.0.0\lib\net20\PdfiumViewer.dll</HintPath>
@@ -85,4 +71,24 @@
     <Content Include="x86\pdfium.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="..\packages\ILRepack.MSBuild.Task.1.0.9\build\ILRepack.MSBuild.Task.targets" Condition="Exists('..\packages\ILRepack.MSBuild.Task.1.0.9\build\ILRepack.MSBuild.Task.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\ILRepack.MSBuild.Task.1.0.9\build\ILRepack.MSBuild.Task.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\ILRepack.MSBuild.Task.1.0.9\build\ILRepack.MSBuild.Task.targets'))" />
+  </Target>
+  <!-- ILRepack -->
+  <Target Name="BeforeBuild">
+    <ItemGroup>
+      <InputAssemblies Include="..\packages\Eyes.Images.1.22.0\lib\net35\Eyes.Images.dll" />
+      <InputAssemblies Include="..\packages\Eyes.Sdk.2.5.3\lib\net45\Eyes.Sdk.DotNet.dll" />
+      <InputAssemblies Include="..\packages\Eyes.Sdk.2.5.3\lib\net45\Eyes.Utils.DotNet.dll" />
+      <InputAssemblies Include="..\packages\DotNetZip.Reduced.1.9.1.8\lib\net20\Ionic.Zip.Reduced.dll" />
+      <InputAssemblies Include="..\packages\log4net.2.0.0\lib\net40-full\log4net.dll" />
+      <InputAssemblies Include="..\packages\Newtonsoft.Json.6.0.1\lib\net45\Newtonsoft.Json.dll" />
+    </ItemGroup>
+    <ILRepack InputAssemblies="@(InputAssemblies)" TargetKind="Dll" OutputFile="$(OutputPath)\Eyes.Bundle.dll" />
+  </Target>
+  <!-- /ILRepack -->
 </Project>
